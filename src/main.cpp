@@ -6,6 +6,15 @@
  * Author: WILLOMAE
  */
 #include <Arduino.h>
+
+#define VOLT_MAX        5
+#define VOLT_MIN        0
+#define AMP_MAX         20
+#define AMP_MIN         4
+#define RESISTOR        250
+#define DEPTH_MAX       (10*100)
+#define DEPTH_MIN       0
+
 int readAnalogInput (void);
 double calcVoltage (int);
 double calcCurrent (double);
@@ -68,17 +77,17 @@ int readAnalogInput()
 }
 double calcVoltage (int adc)
 {
-    double volt = (double)adc * (5 - 0) / (1023 - 0);
+    double volt = (double)adc * (VOLT_MAX - VOLT_MIN) / (1023 - 0);
     int temp = volt * 100;
     volt = (double)temp / 100;
     return volt;
 }
 double calcCurrent (double volt)
 {
-    double amp = (volt / 250) * 1000;
+    double amp = (volt / RESISTOR) * 1000;
     return amp;
 }
 double calcDistance (double amp)
 {
-    return (amp - 4) * 1000 / 16;
+    return (amp - AMP_MIN) * (DEPTH_MAX - DEPTH_MIN) / (AMP_MAX - AMP_MIN);
 }
