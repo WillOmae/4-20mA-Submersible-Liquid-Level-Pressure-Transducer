@@ -15,7 +15,7 @@
 #define DEPTH_MAX       (10*100)
 #define DEPTH_MIN       0
 
-int readAnalogInput (void);
+double readAnalogInput (void);
 double calcVoltage (int);
 double calcCurrent (double);
 double calcDistance (double);
@@ -26,11 +26,13 @@ void setup()
 
 void loop()
 {
-    int adc = readAnalogInput();
+    double adc = readAnalogInput();
     double volt = calcVoltage (adc);
     double amp = calcCurrent (volt);
     double cm = calcDistance (amp);
-    Serial.print ("V:\t");
+    Serial.print ("A:");
+    Serial.print (adc, 3);
+    Serial.print ("\tV:");
     Serial.print (volt, 3);
     Serial.print ("V");
     Serial.print ("\tI:");
@@ -42,7 +44,7 @@ void loop()
     Serial.println();
     delay (1000);
 }
-int readAnalogInput()
+double readAnalogInput()
 {
     int buf[10], temp;
 
@@ -65,7 +67,7 @@ int readAnalogInput()
         }
     }
 
-    int avgValue = 0;
+    double avgValue = 0;
 
     for (int i = 2; i < 8; i++)
     {
@@ -75,7 +77,7 @@ int readAnalogInput()
     avgValue /= 6;
     return avgValue;
 }
-double calcVoltage (int adc)
+double calcVoltage (double adc)
 {
     double volt = (double)adc * (VOLT_MAX - VOLT_MIN) / (1023 - 0);
     int temp = volt * 100;
